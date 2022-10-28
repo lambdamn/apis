@@ -35,7 +35,6 @@ import com.sun.jna.Native;
 public class EzConnectorDemo {
   public interface EzConnector extends Library {
     public String doPayment(double amount);
-    public String getCard(double amount);
   }
 
   public static void main(String[] args) {
