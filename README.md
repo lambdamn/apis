@@ -19,13 +19,13 @@ EzConnector.dll->Client: Гүйлгээний хүсэлтийн\nхариу
 
 ## 1.2. Пос төхөөрөмжийн Driver суулгах
 
-[USB Driver - Татах](/files/usb_driver.rar)
+[USB Driver - Татах](/apis/files/usb_driver.rar)
 
 ## 1.3. Ez-Connector.dll санг холбох
 
 Хувилбар - 0.0.2
 
-[Ez-Connector.dll - Татах](/files/ez-connector.dll)
+[Ez-Connector.dll - Татах](/apis/files/ez-connector.dll)
 
 **Жава код**
 
