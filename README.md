@@ -35,9 +35,18 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 
 public class EzConnectorDemo {
+  public static final int PAYMENT_NONE = 0;
+  public static final int PAYMENT_CARD = 1;
+  public static final int PAYMENT_CASH = 2;
+  public static final int PAYMENT_SOCIAL_MOBILE = 3;
+  public static final int PAYMENT_SOCIAL_QRCODE = 4;
+  public static final int PAYMENT_UPI_QRCODE = 5;
+  public static final int PAYMENT_MERCHANT_WALLET = 6;
+  public static final int PAYMENT_MONPAY = 7;
+
   public interface EzConnector extends Library {
     public String logon();
-    public String payment(double amount, boolean skipPrint);
+    public String payment(double amount, boolean skipPrint, int payment, int defaultQrPayment);
     public String refund(String traceno, boolean skipPrint);
     public String settlement(boolean skipPrint);
     public String version();
@@ -46,7 +55,7 @@ public class EzConnectorDemo {
   public static void main(String[] args) {
     EzConnector lib =
         (EzConnector)Native.loadLibrary("ez-connector.dll", EzConnector.class);
-    String result = lib.payment(2, true);
+    String result = lib.payment(2, true, PAYMENT_NONE, PAYMENT_MONPAY);
     System.out.println(result);
     String version = lib.version();
     System.out.println(version);
@@ -63,12 +72,21 @@ namespace EzConnectorDemo
 {
     public class EzConnector
     {
+        public static readonly int PAYMENT_NONE = 0;
+        public static readonly int PAYMENT_CARD = 1;
+        public static readonly int PAYMENT_CASH = 2;
+        public static readonly int PAYMENT_SOCIAL_MOBILE = 3;
+        public static readonly int PAYMENT_SOCIAL_QRCODE = 4;
+        public static readonly int PAYMENT_UPI_QRCODE = 5;
+        public static readonly int PAYMENT_MERCHANT_WALLET = 6;
+        public static readonly int PAYMENT_MONPAY = 7;
+
         [DllImport("ez-connector.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern string version();
         [DllImport("ez-connector.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern string logon();
         [DllImport("ez-connector.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern string payment(double amount, bool skipPrint);
+        public static extern string payment(double amount, bool skipPrint, int payment, int defaultQrPayment);
         [DllImport("ez-connector.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern string refund(string traceno, bool skipPrint);
         [DllImport("ez-connector.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
@@ -91,7 +109,7 @@ namespace EzConnectorDemo
     }
 }
 // Ашиглах
-string result = EzConnector.payment(amount, true);
+string result = EzConnector.payment(amount, true, EzConnector.PAYMENT_NONE, EzConnector.PAYMENT_MONPAY);
 byte[] bytes = Encoding.GetEncoding(1252).GetBytes(result);
 string encodingFixedResult = Encoding.UTF8.GetString(bytes);
 PurchaseResponse response = JsonConvert.DeserializeObject<PurchaseResponse>(encodingFixedResult);
@@ -140,7 +158,7 @@ string logon()
 ## 1.6. Гүйлгээ хийх
 
 ```
-string payment(double amount, bool skipPrint)
+string payment(double amount, bool skipPrint, int payment, int defaultQrPayment)
 ```
 
 Худалдан авалт буюу гүйлгээ хийх үед ашиглана.
@@ -149,14 +167,28 @@ string payment(double amount, bool skipPrint)
 
 ### 1.6.1. Гүйлгээ хийхэд шаардлагатай параметрүүд
 
-| Параметр  | Төрөл  | Тайлбар            |
-| --------- | ------ | ------------------ |
-| amount    | double | Гүйлгээ хийх дүн   |
-| skipPrint | bool   | Баримт хэвлэх эсэх |
+| Параметр         | Төрөл  | Тайлбар                                                                                                  |
+| ---------------- | ------ | -------------------------------------------------------------------------------------------------------- |
+| amount           | double | Гүйлгээ хийх дүн                                                                                         |
+| skipPrint        | bool   | Баримт хэвлэх эсэх                                                                                       |
+| payment          | int    | Төлбөрийн хэрэгслийг сонгож илгээх                                                                       |
+| defaultQrPayment | int    | Төлбөрийн сонголтын хажууд default-р гарч ирэх төлбөрийн хэрэгсэл, зөвхөн 4,7 утгуудаас сонгон дамжуулах |
 
 [==============]
 
-### 1.6.2. Гүйлгээний хүсэлтийн хариу
+### 1.6.2. Төлбөрийн хэрэгслийн утга
+
+| Утга | Төрөл                        | Тайлбар                                                         |
+| ---- | ---------------------------- | --------------------------------------------------------------- |
+| 0    | Төлбөрийн хэрэгсэл сонгоогүй | Боломжит бүх төлбөрийн хэрэгслийн сонголтууд пос дээр гарч ирнэ |
+| 1    | Карт                         | Зөвхөн картын гүйлгээ хийх үед                                  |
+| 3    | SocialPay - mobile           | Зөвхөн SocialPay - утасны дугаар ашиглан гүйлгээ хийх үед       |
+| 4    | SocialPay - QR               | Зөвхөн SocialPay - QR код ашиглан гүйлгээ хийх үед              |
+| 7    | Monpay - QR                  | Зөвхөн Monpay - QR код ашиглан гүйлгээ хийх үед                 |
+
+[==============]
+
+### 1.6.3. Гүйлгээний хүсэлтийн хариу
 
 Гүйлгээний хүсэлтийн хариуд ирж байгаа `string` утга нь `json` форматтай байх ба дараах бүтэцтэй байна.
 
