@@ -23,7 +23,9 @@ EzConnector.dll->Client: Гүйлгээний хүсэлтийн\nхариу
 
 ## 1.3. Ez-Connector.dll санг системд оруулах
 
-[Ez-Connector.dll - Татах](/files/ez-connector.dll)
+[Ez-Connector.dll (64bit) - Татах](/files/64bit/ez-connector.dll)
+
+[Ez-Connector.dll (32bit) - Татах](/files/32bit/ez-connector.dll)
 
 **Жава код**
 
