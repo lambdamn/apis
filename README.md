@@ -4,26 +4,28 @@
 
 ## 1. Танилцуулга
 
-**Ez-Connector** сан нь `Касс`-ын системийг `Изи Пэй пос`-той холболт хийх зориулалттай бөгөөд
+**Ez-Connector** сан нь `Касс`-ын системийг `Голомт пос`-той холболт хийх зориулалттай бөгөөд
 тус гарын авлага нь уг холболтыг хэрхэн хийх талаар зааварчилгааг агуулсан болно.
 
 ## 1.1. Sequence Diagram
 
 ```seq
 Client->EzConnector.dll: Гүйлгээний хүсэлт
-EzConnector.dll->Ezpay POS: Гүйлгээний хүсэлт
-Note right of Ezpay POS: Төлбөр төлөлт\nхийгдэнэ
-Ezpay POS->EzConnector.dll: Гүйлгээний хүсэлтийн\nхариу
+EzConnector.dll->Golomt POS: Гүйлгээний хүсэлт
+Note right of Golomt POS: Төлбөр төлөлт\nхийгдэнэ
+Golomt POS->EzConnector.dll: Гүйлгээний хүсэлтийн\nхариу
 EzConnector.dll->Client: Гүйлгээний хүсэлтийн\nхариу
 ```
 
 ## 1.2. Пос төхөөрөмжийн Driver суулгах
 
-[USB Driver - Татах](/apis/files/usb_driver.rar)
+| Посын загвар | USB Driver                          |
+| -----------: | :---------------------------------- |
+|      NewLand | [Татах](/apis/files/usb_driver.rar) |
 
 ## 1.3. Ez-Connector.dll санг холбох
 
-Хувилбар - 0.0.3
+Хувилбар - 0.0.4
 
 [Ez-Connector.dll (64bit) - Татах](/apis/files/64bit/ez-connector.dll)
 
@@ -48,16 +50,17 @@ public class EzConnectorDemo {
 
   public interface EzConnector extends Library {
     public String logon();
-    public String payment(double amount, boolean skipPrint, int payment, int defaultQrPayment);
+    public String payment(double amount, boolean skipPrint, int payment, int defaultQrPayment, String extra);
     public String refund(String traceno, boolean skipPrint);
     public String settlement(boolean skipPrint);
     public String version();
+    public String getIdCard();
   }
 
   public static void main(String[] args) {
     EzConnector lib =
         (EzConnector)Native.loadLibrary("ez-connector.dll", EzConnector.class);
-    String result = lib.payment(2, true, PAYMENT_NONE, PAYMENT_MONPAY);
+    String result = lib.payment(2, true, PAYMENT_NONE, PAYMENT_MONPAY, "");
     System.out.println(result);
     String version = lib.version();
     System.out.println(version);
@@ -88,7 +91,7 @@ namespace EzConnectorDemo
         [DllImport("ez-connector.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern string logon();
         [DllImport("ez-connector.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern string payment(double amount, bool skipPrint, int payment, int defaultQrPayment);
+        public static extern string payment(double amount, bool skipPrint, int payment, int defaultQrPayment, string extra = "");
         [DllImport("ez-connector.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern string refund(string traceno, bool skipPrint);
         [DllImport("ez-connector.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
@@ -108,6 +111,7 @@ namespace EzConnectorDemo
         public string transactionAt { get; set; }
         public string merchantId { get; set; }
         public string terminalId { get; set; }
+        public string extra { get; set; }
     }
 }
 // Ашиглах
@@ -160,7 +164,7 @@ string logon()
 ## 1.6. Гүйлгээ хийх
 
 ```
-string payment(double amount, bool skipPrint, int payment, int defaultQrPayment)
+string payment(double amount, bool skipPrint, int payment, int defaultQrPayment, string extra)
 ```
 
 Худалдан авалт буюу гүйлгээ хийх үед ашиглана.
@@ -175,6 +179,7 @@ string payment(double amount, bool skipPrint, int payment, int defaultQrPayment)
 | skipPrint        | bool   | Баримт хэвлэх эсэх                                                                                       |
 | payment          | int    | Төлбөрийн хэрэгслийг сонгож илгээх                                                                       |
 | defaultQrPayment | int    | Төлбөрийн сонголтын хажууд default-р гарч ирэх төлбөрийн хэрэгсэл, зөвхөн 4,7 утгуудаас сонгон дамжуулах |
+| extra            | string | Банктай нэмэлт системийн холболт хийх үед дамжуулах утга, банктай урьдчилан тохиролцох шаардлагатай      |
 
 [==============]
 
@@ -207,6 +212,7 @@ string payment(double amount, bool skipPrint, int payment, int defaultQrPayment)
 | `transactionAt` | string  | Гүйлгээ хийгдсэн огноо                         | Үгүй   |
 |    `merchantId` | string  | Мерчант дугаар                                 | Үгүй   |
 |    `terminalId` | string  | Терминал дугаар                                | Үгүй   |
+|         `extra` | string  | Хүсэлтэнд дамжуулсан утга буцаж ирнэ           | Үгүй   |
 
 ## 1.7. Буцаалт хийх
 
@@ -279,5 +285,37 @@ string settlement(bool skipPrint)
 |             `date` | string  | Буцаалтын гүйлгээ хийгдсэн огноо               | Үгүй   |
 |       `merchantId` | string  | Мерчант дугаар                                 | Үгүй   |
 |       `terminalId` | string  | Терминал дугаар                                | Үгүй   |
+
+[==============]
+
+## 1.9. Цахим иргэний үнэмлэхийн мэдээлэл унших
+
+```
+string getIDCard()
+```
+
+Цахим иргэний үнэмлэхний мэдээлэл унших тохиолдолд дуудаж ашиглана.
+
+[==============]
+
+### 1.9.1. Цахим иргэний үнэмлэхийн мэдээлэл уншихад шаардлагатай параметрүүд
+
+Байхгүй
+
+[==============]
+
+### 1.9.2. Цахим иргэний үнэмлэхийн мэдээлэл унших хүсэлтийн хариу
+
+Хүсэлтийн хариуд ирж байгаа `string` утга нь `json` форматтай байх ба дараах бүтэцтэй байна.
+
+|     Attribute | Төрөл   | Тайлбар                                        | Заавал |
+| ------------: | ------- | :--------------------------------------------- | ------ |
+|     `succeed` | boolean | Хүсэлт амжилттай болсон эсэх                   | Тийм   |
+|     `message` | string  | Хүсэлт амжилтгүй үед алдааг илэрхийлэх тайлбар | Үгүй   |
+|     `surname` | string  | Овог                                           | Үгүй   |
+|   `givenName` | string  | Нэр                                            | Үгүй   |
+|  `registerno` | string  | Регистр дугаар                                 | Үгүй   |
+| `dateOfBirth` | string  | Төрсөн огноо                                   | Үгүй   |
+|         `sex` | string  | Хүйс                                           | Үгүй   |
 
 [==============]
