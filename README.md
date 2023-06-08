@@ -212,7 +212,6 @@ string payment(double amount, bool skipPrint, int payment, int defaultQrPayment,
 | `transactionAt` | string  | Гүйлгээ хийгдсэн огноо                         | Үгүй   |
 |    `merchantId` | string  | Мерчант дугаар                                 | Үгүй   |
 |    `terminalId` | string  | Терминал дугаар                                | Үгүй   |
-|         `extra` | string  | Хүсэлтэнд дамжуулсан утга буцаж ирнэ           | Үгүй   |
 
 ## 1.7. Буцаалт хийх
 
