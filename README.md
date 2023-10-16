@@ -25,7 +25,7 @@ EzConnector.dll->Client: Гүйлгээний хүсэлтийн\nхариу
 
 ## 1.3. Ez-Connector.dll санг холбох
 
-Хувилбар - 0.0.7
+Хувилбар - 0.0.8
 
 [Ez-Connector.dll (64bit) - Татах](/apis/files/64bit/ez-connector.dll)
 
@@ -493,5 +493,19 @@ Umoney карт сүүлийн цэнэглэлт буцаах үед ашигл
 |   `preBalance` | double  | Картын өмнөх үлдэгдэл                          | Үгүй   |
 |  `postBalance` | double  | Картын цэнэглэлтийн дараах үлдэгдэл            | Үгүй   |
 | `referralcode` | string  | umoneyTopup хүсэлтэнд явуулсан утгыг буцаана   | Үгүй   |
+
+[==============]
+
+## 1.15. Баримт хэвлэх
+
+```
+string print(string printData)
+```
+
+POS төхөөрөмж дээр баримт хэвлэх үед ашиглана.
+
+### 1.15.1. Жишээ код
+
+[C# жишээ код - Татах](/apis/files/printer_classes.rar)
 
 [==============]
