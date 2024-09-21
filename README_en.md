@@ -4,7 +4,7 @@
 
 ## 1. Introduction
 
-**Ez-Connector** library is designed to connect `Cashier` systems into `Golomt POS`. And this manual contains instructions on how to make that connection
+**Ez-Connector** library is designed to integrate `Cashier` systems into `Golomt POS`. And this manual contains instructions on how to make that connection
 
 ## 1.1. Sequence Diagram
 
@@ -30,7 +30,7 @@ Version - 0.0.9
 
 [Ez-Connector.dll (32bit) - Download](/apis/files/32bit/ez-connector.dll)
 
-**Жава код**
+**Java code**
 
 ```
 import com.sun.jna.Callback;
@@ -67,7 +67,7 @@ public class EzConnectorDemo {
 }
 ```
 
-**C# код**
+**C# code**
 
 ```
 using System.Runtime.InteropServices;
