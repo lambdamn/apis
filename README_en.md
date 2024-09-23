@@ -38,15 +38,6 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 
 public class EzConnectorDemo {
-  public static final int PAYMENT_NONE = 0;
-  public static final int PAYMENT_CARD = 1;
-  public static final int PAYMENT_CASH = 2;
-  public static final int PAYMENT_SOCIAL_MOBILE = 3;
-  public static final int PAYMENT_SOCIAL_QRCODE = 4;
-  public static final int PAYMENT_UPI_QRCODE = 5;
-  public static final int PAYMENT_MERCHANT_WALLET = 6;
-  public static final int PAYMENT_MONPAY = 7;
-
   public interface EzConnector extends Library {
     public String logon();
     public String payment(double amount, boolean skipPrint, int payment, int defaultQrPayment, String extra);
@@ -59,7 +50,7 @@ public class EzConnectorDemo {
   public static void main(String[] args) {
     EzConnector lib =
         (EzConnector)Native.loadLibrary("ez-connector.dll", EzConnector.class);
-    String result = lib.payment(2, true, PAYMENT_NONE, PAYMENT_MONPAY, "");
+    String result = lib.payment(2, true, 1, 0, "");
     System.out.println(result);
     String version = lib.version();
     System.out.println(version);
@@ -76,15 +67,6 @@ namespace EzConnectorDemo
 {
     public class EzConnector
     {
-        public static readonly int PAYMENT_NONE = 0;
-        public static readonly int PAYMENT_CARD = 1;
-        public static readonly int PAYMENT_CASH = 2;
-        public static readonly int PAYMENT_SOCIAL_MOBILE = 3;
-        public static readonly int PAYMENT_SOCIAL_QRCODE = 4;
-        public static readonly int PAYMENT_UPI_QRCODE = 5;
-        public static readonly int PAYMENT_MERCHANT_WALLET = 6;
-        public static readonly int PAYMENT_MONPAY = 7;
-
         [DllImport("ez-connector.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern string version();
         [DllImport("ez-connector.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
@@ -111,10 +93,12 @@ namespace EzConnectorDemo
         public string merchantId { get; set; }
         public string terminalId { get; set; }
         public string extra { get; set; }
+        public string discountTitle { get; set; }
+        public double discountAmount { get; set; }
     }
 }
 // Use
-string result = EzConnector.payment(amount, true, EzConnector.PAYMENT_NONE, EzConnector.PAYMENT_MONPAY);
+string result = EzConnector.payment(amount, true, 1, 0);
 byte[] bytes = Encoding.GetEncoding(1252).GetBytes(result);
 string encodingFixedResult = Encoding.UTF8.GetString(bytes);
 PurchaseResponse response = JsonConvert.DeserializeObject<PurchaseResponse>(encodingFixedResult);
@@ -163,7 +147,7 @@ This function is called when the checkout application starts. By doing this, `Ez
 ## 1.6. Make a transaction
 
 ```
-string payment(double amount, bool skipPrint, int payment, int defaultQrPayment, string extra)
+string payment(double amount, true, 1, 0, "")  //Card payment
 ```
 
 Used when making a purchase or transaction.
@@ -172,50 +156,36 @@ Used when making a purchase or transaction.
 
 ### 1.6.1. Parameters for transaction request
 
-| Parameter        | Type   | Description                                                                                                           |
-| ---------------- | ------ | --------------------------------------------------------------------------------------------------------------------- |
-| amount           | double | Transaction amount                                                                                                    |
-| skipPrint        | bool   | Whether to print receipt                                                                                              |
-| payment          | int    | Payment method to make transactions                                                                                   |
-| defaultQrPayment | int    | Next to the payment option, the QR payment method that appears by default, only 4,7 values ​​to transfer              |
-| extra            | string | When making an additional system connection with the bank, the transfer value must be agreed in advance with the bank |
+| Parameter | Type   | Default value & Description |
+| --------- | ------ | --------------------------- |
+| amount    | double | Transaction amount          |
 
 [==============]
 
-### 1.6.2. `payment` parameter values
-
-| Value | Meaning                    | Description                                                  |
-| ----- | -------------------------- | ------------------------------------------------------------ |
-| 0     | No payment method selected | All available payment options will appear in the pos         |
-| 1     | Card                       | Only during card transactions                                |
-| 3     | SocialPay - mobile         | Only when making transactions using SocialPay - phone number |
-| 4     | SocialPay - QR             | Only when making a transaction using SocialPay - QR code     |
-| 7     | Monpay - QR                | Only when transacting using Monpay - QR code                 |
-
-[==============]
-
-### 1.6.3. Response of payment transaction
+### 1.6.2. Response of payment transaction
 
 `string` The value received in response to a `payment` transaction request and it has the following `json` format
 
-|       Attribute | Type    | Description                                       | Required |
-| --------------: | ------- | :------------------------------------------------ | -------- |
-|       `succeed` | boolean | Whether the request was successful                | Yes      |
-|       `message` | string  | A description of the error when the request fails | No       |
-|        `amount` | double  | Transaction amount                                | No       |
-|       `payment` | string  | The payment method used for the transaction       | No       |
-|     `systemRef` | string  | Transaction ref no                                | No       |
-|       `traceno` | string  | Transaction trace number                          | No       |
-|   `approveCode` | string  | Approval code                                     | No       |
-|     `maskedPAN` | string  | Masked card number                                | No       |
-| `transactionAt` | string  | Date of transaction                               | No       |
-|    `merchantId` | string  | Merchant ID                                       | No       |
-|    `terminalId` | string  | Terminal ID                                       | No       |
+|        Attribute | Type    | Description                                       | Required |
+| ---------------: | ------- | :------------------------------------------------ | -------- |
+|        `succeed` | boolean | Whether the request was successful                | Yes      |
+|        `message` | string  | A description of the error when the request fails | No       |
+|         `amount` | double  | Transaction amount                                | No       |
+|        `payment` | string  | The payment method used for the transaction       | No       |
+|      `systemRef` | string  | Transaction ref no                                | No       |
+|        `traceno` | string  | Transaction trace number                          | No       |
+|    `approveCode` | string  | Approval code                                     | No       |
+|      `maskedPAN` | string  | Masked card number                                | No       |
+|  `transactionAt` | string  | Date of transaction                               | No       |
+|     `merchantId` | string  | Merchant ID                                       | No       |
+|     `terminalId` | string  | Terminal ID                                       | No       |
+|  `discountTitle` | string  | Discount title                                    | No       |
+| `discountAmount` | double  | Discount amount                                   | No       |
 
 ## 1.7. Make a refund transaction
 
 ```
-string refund(string traceno, bool skipPrint)
+string refund(string traceno, true)
 ```
 
 Used when a purchase is returned.
@@ -224,10 +194,9 @@ Used when a purchase is returned.
 
 ### 1.7.1. Parameters required for `refund`
 
-| Parameter | Type   | Description              |
-| --------- | ------ | ------------------------ |
-| traceno   | string | Transaction trace number |
-| skipPrint | bool   | Whether to print receipt |
+| Parameter | Type   | Default value & Description |
+| --------- | ------ | --------------------------- |
+| traceno   | string | Transaction trace number    |
 
 [==============]
 
@@ -253,22 +222,14 @@ Used when a purchase is returned.
 ## 1.8. Make a settlement
 
 ```
-string settlement(bool skipPrint)
+string settlement(true)
 ```
 
 By calling this function of `Ez-Connector` all transactions made on that day will be passed to the bank for confirmation. In this way, the following day, the income of all transactions of that day will be transferred to the organization's account
 
 [==============]
 
-### 1.8.1. Parameters required for `settlement`
-
-| Parameter | Type | Description              |
-| --------- | ---- | ------------------------ |
-| skipPrint | bool | Whether to print receipt |
-
-[==============]
-
-### 1.8.2. Response of `settlement` transaction
+### 1.8.1. Response of `settlement` transaction
 
 `string` The value received in response to a `settlement` transaction request and it has the following `json` format
 
