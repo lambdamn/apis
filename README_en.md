@@ -107,6 +107,14 @@ PurchaseResponse response = JsonConvert.DeserializeObject<PurchaseResponse>(enco
 
 [==============]
 
+> Before you start integration please check belows carefully
+
+- Make sure ezpay app is opened on POS terminal
+- Turn of screen timeout. Settings -> Display -> Sleep -> Never
+- Connect USB-A cable into USB port of PC
+
+[==============]
+
 ## 1.4. Check the Ez-Connector version
 
 ```
@@ -147,7 +155,7 @@ This function is called when the checkout application starts. By doing this, `Ez
 ## 1.6. Make a transaction
 
 ```
-string payment(double amount, true, 1, 0, "")  //Card payment
+string payment(double amount, true, 1, 0, "") //Card payment
 ```
 
 Used when making a purchase or transaction.
