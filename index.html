@@ -28,9 +28,17 @@
     <div id="layout">
       <header>
         <p>
-          Language
+          <span>Windows Кассын системээс холболт хийх:</span>
           <a style="margin-left: 3px" href="?lang=">Монгол</a>
           <a style="margin-left: 3px" href="?lang=en">English</a>
+        </p>
+        <!-- <p>
+          <span>Андройд Кассын системээс холболт хийх:</span>
+          <a style="margin-left: 3px" href="?doc=android">Монгол</a>
+        </p> -->
+        <p>
+          <span>Андройд Deeplink холболт:</span>
+          <a style="margin-left: 3px" href="?doc=deeplink">Монгол</a>
         </p>
       </header>
       <div id="test-editormd-view">
@@ -67,7 +75,8 @@
       $(function () {
         var testEditormdView;
         var mid = $.urlParam("lang") ? "_" + $.urlParam("lang") : "";
-        $.get("README" + mid + ".md", function (markdown) {
+        var doc = $.urlParam("doc") ? "_" + $.urlParam("doc") : "";
+        $.get("README" + mid + doc + ".md", function (markdown) {
           testEditormdView = editormd.markdownToHTML("test-editormd-view", {
             markdown: markdown,
             //htmlDecode      : true,
