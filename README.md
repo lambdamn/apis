@@ -25,7 +25,7 @@ EzConnector.dll->Client: Гүйлгээний хүсэлтийн\nхариу
 
 ## 1.3. Ez-Connector.dll санг холбох
 
-Хувилбар - 0.0.9
+Хувилбар - 0.0.10
 
 [Ez-Connector.dll (64bit) - Татах](/apis/files/64bit/ez-connector.dll)
 
