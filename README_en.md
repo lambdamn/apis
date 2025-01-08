@@ -24,7 +24,7 @@ EzConnector.dll->Client: Transaction response
 
 ## 1.3. Linking the Ez-Connector.dll library
 
-Version - 0.0.9
+Version - 0.0.10
 
 [Ez-Connector.dll (64bit) - Download](/apis/files/64bit/ez-connector.dll)
 
