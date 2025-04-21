@@ -190,6 +190,11 @@ Used when making a purchase or transaction.
 |  `discountTitle` | string  | Discount title                                    | No       |
 | `discountAmount` | double  | Discount amount                                   | No       |
 
+### 1.6.3. Verify and confirm whether the transaction was successful.
+
+- Check whether the amount received in the "amount" field matches the requested amount.
+- Verify whether the "maskedPAN" field has a value.
+
 ## 1.7. Make a refund transaction
 
 ```
