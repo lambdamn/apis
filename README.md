@@ -25,11 +25,11 @@ EzConnector.dll->Client: Гүйлгээний хүсэлтийн\nхариу
 
 ## 1.3. Ez-Connector.dll санг холбох
 
-Хувилбар - 0.0.11
+Хувилбар - 0.0.12
 
-[Ez-Connector.dll (64bit) - Татах](/apis/files/64bit/ez-connector.dll)
+[Ez-Connector.dll (64bit) - Татах](/apis/files/64bit/ez-connector_x64.dll)
 
-[Ez-Connector.dll (32bit) - Татах](/apis/files/32bit/ez-connector.dll)
+[Ez-Connector.dll (32bit) - Татах](/apis/files/32bit/ez-connector_x86.dll)
 
 **Жава код**
 
