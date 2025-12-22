@@ -259,3 +259,22 @@ By calling this function of `Ez-Connector` all transactions made on that day wil
 |       `terminalId` | string  | Terminal ID                                       | No       |
 
 [==============]
+
+## 1.9. Health check
+
+```
+string healthcheck()
+```
+
+It is an action intended to check whether the connection from the POS device to the bank is functioning normally.
+
+[==============]
+
+### 1.9.1. Response
+
+`string` The value received in response to a request and it has the following `json` format
+
+| Attribute | Type    | Description                                       | Required |
+| --------: | ------- | :------------------------------------------------ | -------- |
+| `succeed` | boolean | Whether the request was successful                | Yes      |
+| `message` | string  | A description of the error when the request fails | No       |
